@@ -21,7 +21,7 @@ public class ConsumerService {
         Optional<Message> message = messageService.readNextMessageAfterOffset(topic, offset);
         if(message.isPresent()) {
             consumerTopicOffsetService.recordConsumption(topic, consumerGroupId, message.get());
-            log.info(message.get().getId() + " message of topic : " + topic + " consumed by " + consumerGroupId);
+            log.info("MessageId: " + message.get().getId() + " of topic : " + topic + " consumed by " + consumerGroupId);
         }
         return message;
     }

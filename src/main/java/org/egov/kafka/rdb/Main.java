@@ -3,6 +3,7 @@ package org.egov.kafka.rdb;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.kafka.rdb.client.KafkaConsumer;
+import org.egov.kafka.rdb.client.KafkaRDBTemplate;
 import org.egov.kafka.rdb.model.Message;
 import org.egov.kafka.rdb.repository.MessageRepository;
 import org.egov.kafka.rdb.repository.TablesUtil;
@@ -27,9 +28,7 @@ public class Main {
     }
 
     @Autowired
-    private ProducerService producerService;
-    @Autowired
-    private ConsumerService consumerService;
+    private KafkaRDBTemplate kafkaRDBTemplate;
     @Autowired
     private KafkaConsumer kafkaConsumer;
 
@@ -41,23 +40,15 @@ public class Main {
     @PostConstruct
     public void init() throws SchedulerException, InterruptedException {
 
-//        producerService.send(topic, null, "zxc");
+        kafkaRDBTemplate.send(topic, null, "zxc");
 
         kafkaConsumer.subscribe(topic, "indexer", new MessageListener<String, Object>() {
             @Override
             public void onMessage(ConsumerRecord<String, Object> data) {
                 String value = (String) data.value();
-                log.info("From message listener : ", value);
+                log.info("From message listener : " + value);
             }
         });
-
-
-//        Optional<Message> message = consumerService.getNextMessageFor(topic, indexerConsumerGroupId);
-//        if(message.isPresent()) {
-//            log.info("MessageId ", message.get().getId());
-//        } else {
-//            log.info("Nothing to consume");
-//        }
 
     }
 

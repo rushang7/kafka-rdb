@@ -49,11 +49,12 @@ public class ConsumerJob implements Job {
             Optional<Message> optionalMessage = consumerService.getNextMessageFor(topic, consumerGroupId);
             if(optionalMessage.isPresent()) {
                 Message message = optionalMessage.get();
+                messagesConsumed++;
                 ConsumerRecord consumerRecord = new ConsumerRecord(topic, 0, message.getId(), message.getKey(),
                         message.getValue());
                 messageListener.onMessage(consumerRecord);
             } else {
-                log.info("Number of consumed messages : ", messagesConsumed);
+                log.info("Number of consumed messages : " + messagesConsumed);
                 break;
             }
         }
