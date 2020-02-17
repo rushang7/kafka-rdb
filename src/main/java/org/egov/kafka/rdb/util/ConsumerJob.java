@@ -1,4 +1,4 @@
-package org.egov.kafka.rdb.client;
+package org.egov.kafka.rdb.util;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

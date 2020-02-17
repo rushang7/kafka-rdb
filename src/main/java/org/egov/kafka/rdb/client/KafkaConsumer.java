@@ -2,9 +2,11 @@ package org.egov.kafka.rdb.client;
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.kafka.rdb.service.ConsumerService;
+import org.egov.kafka.rdb.util.ConsumerJob;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,9 @@ import static org.quartz.TriggerBuilder.newTrigger;
 @Slf4j
 @Component
 public class KafkaConsumer {
+
+    @Value("${consumer.poll.time.ms}")
+    private Long consumerPollTime;
 
     @Autowired
     private ConsumerService consumerService;
@@ -46,7 +51,7 @@ public class KafkaConsumer {
                 .withIdentity(topic + consumerGroupId, "consumer")
                 .startNow()
                 .withSchedule(simpleSchedule()
-                        .withIntervalInMilliseconds(1000)
+                        .withIntervalInMilliseconds(consumerPollTime)
                         .repeatForever())
                 .build();
 
